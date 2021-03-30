@@ -10,7 +10,11 @@ __Set the Pin for the RST and i2c address!__
 // #define RST_PIN 14 // D5 on NodeMCU
 
 // 0x28 is i2c address of the NFC Reader. Check your address with i2cscanner if not match.
-MFRC522 mfrc522(0x28, RST_PIN);   // Create MFRC522 instance.
+MFRC522_I2C mfrc522(0x28, RST_PIN);   // Create MFRC522 instance.
 ```
 
-Thanks to @arozcan for the [MFRC522 i2c Library](https://github.com/arozcan/MFRC522-I2C-Library)
+This Library is the extended Version from @arozcan [MFRC522 i2c Library](https://github.com/arozcan/MFRC522-I2C-Library)
+Renamed to avoid Problems when using multiple Readers via SPI and I2C. Or when you have multiple Compile-Options in your Projetc like in @biologist79 [ESPuino](https://github.com/biologist79/ESPuino.git)
+
+Added Features
+ - Full TwoWire compatibility

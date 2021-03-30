@@ -75,8 +75,8 @@
  * 		Pages 42-43 Authentication configuration
  * 		Pages 44-47 Authentication key
  */
-#ifndef MFRC522_h
-#define MFRC522_h
+#ifndef MFRC522_I2C_h
+#define MFRC522_I2C_h
 
 #include <Arduino.h>
 #include <Wire.h>
@@ -134,7 +134,7 @@ const byte FM17522_firmware_reference[] PROGMEM = {
 	0x56, 0x9A, 0x98, 0x82, 0x26, 0xEA, 0x2A, 0x62
 };
 
-class MFRC522 {
+class MFRC522_I2C {
 public:
 	// MFRC522 registers. Described in chapter 9 of the datasheet.
 	enum PCD_Register {
@@ -321,7 +321,7 @@ public:
 	/////////////////////////////////////////////////////////////////////////////////////
 	// Functions for setting up the Arduino
 	/////////////////////////////////////////////////////////////////////////////////////
-	// MFRC522(byte chipAddress, byte resetPowerDownPin, TwoWire & TwoWireInstance = Wire);
+	// MFRC522_I2C(byte chipAddress, byte resetPowerDownPin, TwoWire & TwoWireInstance = Wire);
     MFRC522(byte chipAddress, byte resetPowerDownPin, TwoWire *TwoWireInstance = &Wire);
 
 	/////////////////////////////////////////////////////////////////////////////////////
