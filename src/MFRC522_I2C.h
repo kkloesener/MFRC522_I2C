@@ -322,7 +322,7 @@ public:
 	// Functions for setting up the Arduino
 	/////////////////////////////////////////////////////////////////////////////////////
 	// MFRC522_I2C(byte chipAddress, byte resetPowerDownPin, TwoWire & TwoWireInstance = Wire);
-    MFRC522(byte chipAddress, byte resetPowerDownPin, TwoWire *TwoWireInstance = &Wire);
+    MFRC522_I2C(byte chipAddress, byte resetPowerDownPin, TwoWire *TwoWireInstance = &Wire);
 
 	/////////////////////////////////////////////////////////////////////////////////////
 	// Basic interface functions for communicating with the MFRC522

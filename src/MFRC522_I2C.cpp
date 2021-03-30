@@ -18,7 +18,7 @@
  * Constructor.
  * Prepares the output pins.
  */
-MFRC522_I2C::MFRC522(	byte chipAddress,
+MFRC522_I2C::MFRC522_I2C(	byte chipAddress,
 					byte resetPowerDownPin,	///< Arduino pin connected to MFRC522's reset and power down input (Pin 6, NRSTPD, active low)
 					TwoWire *TwoWireInstance
 				) {
