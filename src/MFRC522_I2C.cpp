@@ -162,23 +162,24 @@ byte MFRC522_I2C::PCD_CalculateCRC(	byte *data,		///< In: Pointer to the data to
 	PCD_WriteRegister(CommandReg, PCD_CalcCRC);		// Start the calculation
 
 	// Wait for the CRC calculation to complete. Each iteration of the while-loop takes 17.73�s.
-	word i = 5000;
+	const uint32_t deadline = millis() + 89;
 	byte n;
-	while (1) {
+	do {
 		n = PCD_ReadRegister(DivIrqReg);	// DivIrqReg[7..0] bits are: Set2 reserved reserved MfinActIRq reserved CRCIRq reserved reserved
 		if (n & 0x04) {						// CRCIRq bit set - calculation done
-			break;
-		}
-		if (--i == 0) {						// The emergency break. We will eventually terminate on this one after 89ms. Communication with the MFRC522 might be down.
-			return STATUS_TIMEOUT;
-		}
-	}
-	PCD_WriteRegister(CommandReg, PCD_Idle);		// Stop calculating CRC for new content in the FIFO.
+			PCD_WriteRegister(CommandReg, PCD_Idle);		// Stop calculating CRC for new content in the FIFO.
 
-	// Transfer the result from the registers to the result buffer
-	result[0] = PCD_ReadRegister(CRCResultRegL);
-	result[1] = PCD_ReadRegister(CRCResultRegH);
-	return STATUS_OK;
+			// Transfer the result from the registers to the result buffer
+			result[0] = PCD_ReadRegister(CRCResultRegL);
+			result[1] = PCD_ReadRegister(CRCResultRegH);
+			return STATUS_OK;
+		}
+		yield();
+		}
+	while (millis() < deadline)
+
+	return STATUS_TIMEOUT;
+	}
 } // End PCD_CalculateCRC()
 
 
@@ -409,8 +410,9 @@ byte MFRC522_I2C::PCD_CommunicateWithPICC(	byte command,		///< The command to ex
 	// Wait for the command to complete.
 	// In PCD_Init() we set the TAuto flag in TModeReg. This means the timer automatically starts when the PCD stops transmitting.
 	// Each iteration of the do-while-loop takes 17.86�s.
-	i = 2000;
-	while (1) {
+	const uint32_t deadline = millis() + 36;
+
+	do {
 		n = PCD_ReadRegister(ComIrqReg);	// ComIrqReg[7..0] bits are: Set1 TxIRq RxIRq IdleIRq HiAlertIRq LoAlertIRq ErrIRq TimerIRq
 		if (n & waitIRq) {					// One of the interrupts that signal success has been set.
 			break;
@@ -418,9 +420,11 @@ byte MFRC522_I2C::PCD_CommunicateWithPICC(	byte command,		///< The command to ex
 		if (n & 0x01) {						// Timer interrupt - nothing received in 25ms
 			return STATUS_TIMEOUT;
 		}
-		if (--i == 0) {						// The emergency break. If all other condions fail we will eventually terminate on this one after 35.7ms. Communication with the MFRC522 might be down.
-			return STATUS_TIMEOUT;
-		}
+	}
+	while (millis() < deadline);
+
+	if (millis() >= deadline) {
+		return STATUS_TIMEOUT;
 	}
 
 	// Stop now if any errors except collisions were detected.
