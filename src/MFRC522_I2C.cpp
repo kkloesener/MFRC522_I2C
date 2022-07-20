@@ -176,7 +176,7 @@ byte MFRC522_I2C::PCD_CalculateCRC(	byte *data,		///< In: Pointer to the data to
 		}
 		yield();
 		}
-	while (millis() < deadline)
+	while (millis() < deadline);
 
 	return STATUS_TIMEOUT;
 } // End PCD_CalculateCRC()
