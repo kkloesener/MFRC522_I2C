@@ -179,7 +179,6 @@ byte MFRC522_I2C::PCD_CalculateCRC(	byte *data,		///< In: Pointer to the data to
 	while (millis() < deadline)
 
 	return STATUS_TIMEOUT;
-	}
 } // End PCD_CalculateCRC()
 
 
@@ -819,8 +818,8 @@ byte MFRC522_I2C::PCD_Authenticate(byte command,		///< PICC_CMD_MF_AUTH_KEY_A or
 	for (byte i = 0; i < MF_KEY_SIZE; i++) {	// 6 key bytes
 		sendData[2+i] = key->keyByte[i];
 	}
-	for (byte i = 0; i < 4; i++) {				// The first 4 bytes of the UID
-		sendData[8+i] = uid->uidByte[i];
+	for (byte i = 0; i < 4; i++) {				// The last 4 bytes of the UID
+		sendData[8+i] = uid->uidByte[i+uid->size-4];
 	}
 
 	// Start the authentication.
