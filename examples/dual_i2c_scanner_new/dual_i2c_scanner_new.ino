@@ -14,7 +14,7 @@ byte chipAddress = 0x28;
 
 TwoWire i2cBusOne = TwoWire(0);
 TwoWire i2cBusTwo = TwoWire(1);
-MFRC522 mfrc522(chipAddress, RST_PIN, i2cBusTwo);
+MFRC522_I2C mfrc522(chipAddress, RST_PIN, i2cBusTwo);
 
 void setup() {
   byte version;

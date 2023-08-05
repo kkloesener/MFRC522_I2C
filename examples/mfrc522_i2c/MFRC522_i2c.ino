@@ -6,7 +6,7 @@
 
 
 // 0x28 is i2c address on SDA. Check your address with i2cscanner if not match.
-MFRC522 mfrc522(0x28, RST_PIN);   // Create MFRC522 instance.
+MFRC522_I2C mfrc522(0x28, RST_PIN);   // Create MFRC522 instance.
 
 void setup() {
   Serial.begin(115200);           // Initialize serial communications with the PC

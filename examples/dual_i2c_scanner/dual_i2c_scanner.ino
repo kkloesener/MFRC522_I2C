@@ -12,7 +12,7 @@
 
 TwoWire i2cBusOne = TwoWire(0);
 TwoWire i2cBusTwo = TwoWire(1);
-MFRC522 mfrc522(RST_PIN , 0x28, i2cBusTwo);
+MFRC522_I2C mfrc522(RST_PIN , 0x28, i2cBusTwo);
 
 void setup() {
   Serial.begin(115200);           // Initialize serial communications with the PC
