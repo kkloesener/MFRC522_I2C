@@ -203,7 +203,8 @@ void MFRC522_I2C::PCD_Init() {
 		else { // Perform a soft reset
 			PCD_Reset();
 		}
-	else { // Perform a soft reset
+	}
+	else {
 		// RST pin is not controlled by this library.
 		// Give the MFRC522 module some time after power-up so that VDD and
 		// the internal oscillator can settle, then issue a software reset to
