@@ -19,7 +19,7 @@
  * Prepares the output pins.
  */
 MFRC522_I2C::MFRC522_I2C(	byte chipAddress,
-					byte resetPowerDownPin,	///< Arduino pin connected to MFRC522's reset and power down input (Pin 6, NRSTPD, active low)
+					int8_t resetPowerDownPin,	///< Arduino pin connected to MFRC522's reset and power down input (Pin 6, NRSTPD, active low). Set to -1 if the reset/power-down pin is not connected or not used.
 					TwoWire *TwoWireInstance
 				) {
 	_chipAddress = (uint8_t) chipAddress;
@@ -190,16 +190,26 @@ byte MFRC522_I2C::PCD_CalculateCRC(	byte *data,		///< In: Pointer to the data to
  * Initializes the MFRC522 chip.
  */
 void MFRC522_I2C::PCD_Init() {
-	// Set the resetPowerDownPin as digital output, do not reset or power down.
-	pinMode(_resetPowerDownPin, OUTPUT);
+	if (_resetPowerDownPin >= 0) {
+		// Set the resetPowerDownPin as digital output, do not reset or power down.
+		pinMode(_resetPowerDownPin, OUTPUT);
 
 
-	if (digitalRead(_resetPowerDownPin) == LOW) {	//The MFRC522 chip is in power down mode.
-		digitalWrite(_resetPowerDownPin, HIGH);		// Exit power down mode. This triggers a hard reset.
-		// Section 8.8.2 in the datasheet says the oscillator start-up time is the start up time of the crystal + 37,74�s. Let us be generous: 50ms.
-		delay(100);
+		if (digitalRead(_resetPowerDownPin) == LOW) {	//The MFRC522 chip is in power down mode.
+			digitalWrite(_resetPowerDownPin, HIGH);		// Exit power down mode. This triggers a hard reset.
+			// Section 8.8.2 in the datasheet says the oscillator start-up time is the start up time of the crystal + 37,74�s. Let us be generous: 50ms.
+			delay(100);
+		}
+		else { // Perform a soft reset
+			PCD_Reset();
+		}
 	}
-	else { // Perform a soft reset
+	else {
+		// RST pin is not controlled by this library.
+		// Give the MFRC522 module some time after power-up so that VDD and
+		// the internal oscillator can settle, then issue a software reset to
+		// bring the registers into a known state.
+		delay(50);
 		PCD_Reset();
 	}
 
