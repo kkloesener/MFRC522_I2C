@@ -390,7 +390,6 @@ byte MFRC522_I2C::PCD_CommunicateWithPICC(	byte command,		///< The command to ex
 										bool checkCRC		///< In: True => The last two bytes of the response is assumed to be a CRC_A that must be validated.
 									 ) {
 	byte n, _validBits = 0;
-	unsigned int i;
 
 	// Prepare values for BitFramingReg
 	byte txLastBits = validBits ? *validBits : 0;
@@ -1367,12 +1366,12 @@ void MFRC522_I2C::PICC_DumpMifareClassicSectorToSerial(Uid *uid,			///< Pointer 
 	//		g[0]	Access bits for block 0 (for sectors 0-31) or blocks 0-4 (for sectors 32-39)
 	// Each group has access bits [C1 C2 C3]. In this code C1 is MSB and C3 is LSB.
 	// The four CX bits are stored together in a nible cx and an inverted nible cx_.
-	byte c1, c2, c3;		// Nibbles
-	byte c1_, c2_, c3_;		// Inverted nibbles
-	bool invertedError;		// True if one of the inverted nibbles did not match
-	byte g[4];				// Access bits for each of the four groups.
-	byte group;				// 0-3 - active group for access bits
-	bool firstInGroup;		// True for the first block dumped in the group
+	byte c1, c2, c3;			// Nibbles
+	byte c1_, c2_, c3_;			// Inverted nibbles
+	bool invertedError = false;	// True if one of the inverted nibbles did not match
+	byte g[4];					// Access bits for each of the four groups.
+	byte group;					// 0-3 - active group for access bits
+	bool firstInGroup;			// True for the first block dumped in the group
 
 	// Determine position and size of sector.
 	if (sector < 32) { // Sectors 0..31 has 4 blocks each
